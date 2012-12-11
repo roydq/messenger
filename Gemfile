@@ -18,8 +18,7 @@ gem 'jquery-rails'
 
 # testing
 group :test, :development do
-  gem 'minitest-rails'
-  gem 'factory_girl_rails'
+  gem 'fabrication'
   gem 'ffaker'
 end
 

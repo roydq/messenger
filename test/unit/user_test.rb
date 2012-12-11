@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
   test "shit works" do
-    user = FactoryGirl.create(:user)
+    user = Fabricate(:user)
     user.username = 'shitter'
     user.save
 

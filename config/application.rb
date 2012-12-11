@@ -71,7 +71,7 @@ module Messenger
 
     # Generator overrides
     config.generators do |g|
-      g.fixture_replacement :factory_girl                   # Factorygirl instead of fixtures
+      g.fixture_replacement :fabrication, dir: "test/fabricators"
     end
   end
 end
