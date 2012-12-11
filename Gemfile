@@ -13,7 +13,15 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+# use jquery instead of prototype
 gem 'jquery-rails'
+
+# testing
+group :test, :development do
+  gem 'minitest-rails'
+  gem 'factory_girl_rails'
+  gem 'ffaker'
+end
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

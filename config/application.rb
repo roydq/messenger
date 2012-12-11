@@ -68,5 +68,10 @@ module Messenger
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Generator overrides
+    config.generators do |g|
+      g.fixture_replacement :factory_girl                   # Factorygirl instead of fixtures
+    end
   end
 end
