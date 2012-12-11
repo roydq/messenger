@@ -16,10 +16,15 @@ end
 # use jquery instead of prototype
 gem 'jquery-rails'
 
+gem 'rabl'
+gem 'oj'
+
 # testing
 group :test, :development do
   gem 'fabrication'
   gem 'ffaker'
+  gem 'minitest-rails'
+  gem 'mocha', :require => false
 end
 
 # To use ActiveModel has_secure_password

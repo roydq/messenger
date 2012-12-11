@@ -32,4 +32,8 @@ Messenger::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  # Disable debug logging for mongoid.
+  Mongoid.logger.level = Logger::FATAL
+  Moped.logger.level = Logger::FATAL
 end

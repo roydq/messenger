@@ -1,6 +1,6 @@
-require 'test_helper'
+require "minitest_helper"
 
-class MessageTest < ActiveSupport::TestCase
+class MessageTest < MiniTest::Rails::ActiveSupport::TestCase
   test "shit works" do
     message = Fabricate(:message)
     message.body = 'shitter'

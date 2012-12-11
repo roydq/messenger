@@ -61,4 +61,7 @@ Messenger::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
+  # Disable debug logging for mongoid.
+  Mongoid.logger.level = Logger::WARN
+  Moped.logger.level = Logger::WARN
 end

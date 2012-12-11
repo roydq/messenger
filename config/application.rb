@@ -26,7 +26,7 @@ module Messenger
     Moped.logger.level = Logger::DEBUG
 
     # Custom directories with classes and modules you want to be autoloadable.
-    # config.autoload_paths += %W(#{config.root}/extras)
+    config.autoload_paths += %W(#{config.root}/services)
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -71,7 +71,7 @@ module Messenger
 
     # Generator overrides
     config.generators do |g|
-      g.test_framework      :test_unit, fixture_replacement: :fabrication
+      g.test_framework :mini_test, fixture_replacement: :fabrication
       g.fixture_replacement :fabrication, dir: "test/fabricators"
     end
   end
