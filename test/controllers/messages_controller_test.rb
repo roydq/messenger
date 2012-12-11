@@ -18,7 +18,7 @@ class MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test "GET show should return message by id" do
     message = Message.new(body: 'crap')
-    Message.expects(:find).with(message.id.to_s).returns([message])
+    Message.expects(:find).with(message.id.to_s).returns(message)
 
     get :show, :id => message.id.to_s, :format => :json
 
