@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   def index
     @messages = Message.all
-    render :nothing => true unless @messages
+    render :nothing => true and return if @messages.nil?
   end
 
   def show
