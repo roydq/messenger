@@ -16,6 +16,13 @@ class MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
     end
   end
 
+  test "GET index should do nothing if there are no messages" do
+    Message.expects(:all).returns(nil)
+
+    get :index, :format => :json
+    assert_response :success
+  end
+
   test "GET show should return message by id" do
     message = Message.new(body: 'crap')
     Message.expects(:find).with(message.id.to_s).returns(message)
