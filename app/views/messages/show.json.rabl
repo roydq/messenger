@@ -1,2 +1,2 @@
 object @message
-attributes :id, :body
+attributes :id, :body, :lat, :lng, :author

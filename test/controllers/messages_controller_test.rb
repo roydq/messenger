@@ -24,13 +24,16 @@ class MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "GET show should return message by id" do
-    message = Message.new(body: 'crap')
+    message = Message.new(body: 'crap', lat: 10.0, lng: 15.0, author: 'Roy')
     Message.expects(:find).with(message.id.to_s).returns(message)
 
     get :show, :id => message.id.to_s, :format => :json
 
     result = parse_response_body
-    assert_equal message.body, result["body"]
+
+    %w(body lat lng author).each do |field|
+      assert_equal message.send(field).to_s, result[field].to_s
+    end
   end
 
   test "POST create should create a message" do
