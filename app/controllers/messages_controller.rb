@@ -1,6 +1,6 @@
 class MessagesController < ApplicationController
   def index
-    @messages = Message.all
+    @messages = Message.all.entries
     render :nothing => true and return if @messages.nil?
   end
 

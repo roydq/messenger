@@ -3,7 +3,7 @@ require 'minitest_helper'
 class MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   test "GET index should load all messsages" do
     messages = [Message.new(body: 'crap'), Message.new(body: 'test')]
-    Message.expects(:all).returns(messages)
+    Message.expects(:all).returns(stub(:entries => messages))
 
     get :index, :format => :json
     result = parse_response_body
@@ -17,7 +17,7 @@ class MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "GET index should do nothing if there are no messages" do
-    Message.expects(:all).returns(nil)
+    Message.expects(:all).returns(stub(:entries => nil))
 
     get :index, :format => :json
     assert_response :success
