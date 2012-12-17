@@ -1,5 +1,7 @@
 Messenger::Application.routes.draw do
-  resources :messages, :only => [:index, :create, :show], :format => :json
+  namespace :v1 do
+    resources :messages, :only => [:index, :create, :show], :format => :json
+  end
 
   root :to => 'home#index'
 end

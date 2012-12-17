@@ -1,6 +1,6 @@
 require 'minitest_helper'
 
-class MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
+class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   test "GET index should load all messsages" do
     messages = [Message.new(body: 'crap'), Message.new(body: 'test')]
     Message.expects(:all).returns(stub(:entries => messages))
