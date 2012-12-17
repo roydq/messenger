@@ -15,7 +15,7 @@ class MessagesController < ApplicationController
     @message = Message.new(params[:message])
 
     if @message.save
-      respond_with(@message, :location => @message)
+      respond_with(@message)
     else
       head :unprocessable_entity
     end
