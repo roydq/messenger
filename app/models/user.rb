@@ -11,4 +11,11 @@ class User
   validates_presence_of :email
 
   has_secure_password
+
+  def self.authenticate(id, password)
+    if user = self.or({username: id}, {email: id}).first
+      return user.try(:authenticate, password)
+    end
+    false
+  end
 end

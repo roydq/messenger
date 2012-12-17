@@ -31,4 +31,14 @@ class UserTest < ActiveSupport::TestCase
     user.valid?
     assert user.errors.full_messages.include? "Email can't be blank"
   end
+
+  test "user should authenticate with email or username" do
+    user = Fabricate(:user, :password => 'testpassword')
+
+    assert User.authenticate(user.username, 'testpassword')
+    assert !User.authenticate(user.username, 'bs')
+
+    assert User.authenticate(user.email, 'testpassword')
+    assert !User.authenticate(user.email, 'bs')
+  end
 end
