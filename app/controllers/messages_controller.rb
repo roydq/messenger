@@ -1,20 +1,23 @@
 class MessagesController < ApplicationController
+  respond_to :json
+
   def index
     @messages = Message.all.entries
-    render :nothing => true and return if @messages.nil?
+    respond_with(@messages)
   end
 
   def show
     @message = Message.find(params[:id])
+    respond_with(@message)
   end
 
   def create
-    message = Message.new(params[:message])
+    @message = Message.new(params[:message])
 
-    if message.save
-      head :created, :location => message
+    if @message.save
+      respond_with(@message, :location => @message)
     else
-      head :not_acceptable
+      head :unprocessable_entity
     end
   end
 end

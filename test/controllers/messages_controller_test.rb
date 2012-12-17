@@ -39,7 +39,7 @@ class MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   test "POST create should create a message" do
     Message.any_instance.expects(:save).returns(true)
 
-    post :create, :body => 'Test'
+    post :create, :body => 'Test', :format => :json
 
     assert_response :success
  end
@@ -47,9 +47,9 @@ class MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   test "POST create should return an error status if the message wasn't saved" do
     Message.any_instance.expects(:save).returns(false)
 
-    post :create, :body => 'Test'
+    post :create, :body => 'Test', :format => :json
 
-    assert_response :not_acceptable
+    assert_response :unprocessable_entity
  end
 
   private
