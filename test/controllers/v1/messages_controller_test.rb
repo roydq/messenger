@@ -2,7 +2,7 @@ require 'minitest_helper'
 
 class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   test "GET index should load all messsages" do
-    messages = [Message.new(body: 'crap'), Message.new(body: 'test')]
+    messages = [Fabricate.build(:message), Fabricate.build(:message)]
     Message.expects(:all).returns(stub(:entries => messages))
 
     get :index, :format => :json
@@ -11,8 +11,7 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_equal messages.length, result.length
 
     messages.each_with_index do |message, i|
-      assert_equal message.body, result[i]['body']
-      assert_equal message.id.to_s, result[i]['id']
+      verify_fields_on_json_result(message, result)
     end
   end
 
@@ -24,29 +23,35 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "GET show should return message by id" do
-    message = Message.new(body: 'crap', lat: 10.0, lng: 15.0, author: 'Roy')
+    message = Fabricate.build(:message)
     Message.expects(:find).with(message.id.to_s).returns(message)
 
     get :show, :id => message.id.to_s, :format => :json
+    assert_response :success
 
     result = parse_response_body
-
-    %w(body lat lng author).each do |field|
-      assert_equal message.send(field).to_s, result[field].to_s
-    end
+    verify_fields_on_json_result(message, result)
   end
 
-  test "POST create should create a message" do
+  test "POST create should return message data if the message is saved" do
+    message = Fabricate.build(:message)
+    Message.expects(:new).returns(message)
     Message.any_instance.expects(:save).returns(true)
 
     post :create, :body => 'Test', :format => :json
-
     assert_response :success
- end
+
+    result = parse_response_body
+    verify_fields_on_json_result(message, result)
+  end
 
   test "POST create should return an error if the message was not saved" do
     Message.any_instance.expects(:save).returns(false)
     post :create, :body => 'Test', :format => :json
     assert_response :unprocessable_entity
- end
+  end
+
+  def expected_json_object_fields
+    %w(body lat lng author)
+  end
 end
