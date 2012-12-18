@@ -8,7 +8,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "user should require password on create" do
     user = Fabricate.build(:user, :password => nil)
-    user.valid?
+    assert !user.valid?, 'user should have been invalid without password'
     assert user.errors.full_messages.include? "Password can't be blank"
 
     user.password = 'test'
@@ -21,14 +21,14 @@ class UserTest < ActiveSupport::TestCase
   test "user should require username" do
     user = Fabricate.build(:user)
     user.username = nil
-    user.valid?
+    assert !user.valid?, 'user should have been invalid without username'
     assert user.errors.full_messages.include? "Username can't be blank"
   end
 
   test "user should require email" do
     user = Fabricate.build(:user)
     user.email = nil
-    user.valid?
+    assert !user.valid?, 'user should have been invalid without email'
     assert user.errors.full_messages.include? "Email can't be blank"
   end
 
