@@ -1,7 +1,5 @@
 module V1
-  class MessagesController < ApplicationController
-    respond_to :json
-
+  class MessagesController < V1::ApiController
     def index
       @messages = Message.all.entries
       respond_with(@messages)
@@ -18,7 +16,7 @@ module V1
       if @message.save
         respond_with(@message, :location => v1_message_url(@message.id))
       else
-        head :unprocessable_entity
+        render_model_errors(@message)
       end
     end
   end

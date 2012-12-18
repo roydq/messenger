@@ -44,16 +44,9 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :success
  end
 
-  test "POST create should return an error status if the message wasn't saved" do
+  test "POST create should return an error if the message was not saved" do
     Message.any_instance.expects(:save).returns(false)
-
     post :create, :body => 'Test', :format => :json
-
     assert_response :unprocessable_entity
  end
-
-  private
-  def parse_response_body
-    Oj.load(response.body)
-  end
 end

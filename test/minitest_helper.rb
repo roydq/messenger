@@ -11,7 +11,9 @@ require "minitest/rails"
 require "minitest/pride"
 
 class MiniTest::Rails::ActiveSupport::TestCase
-  # Add more helper methods to be used by all tests here...
+  def parse_response_body
+    Oj.load(response.body)
+  end
 end
 
 require "mocha/setup"
