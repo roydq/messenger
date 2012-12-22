@@ -35,10 +35,10 @@ class UserTest < ActiveSupport::TestCase
   test "user should authenticate with email or username" do
     user = Fabricate(:user, :password => 'testpassword')
 
-    assert User.authenticate(user.username, 'testpassword')
+    assert_equal user, User.authenticate(user.username, 'testpassword')
     assert !User.authenticate(user.username, 'bs')
 
-    assert User.authenticate(user.email, 'testpassword')
+    assert_equal user, User.authenticate(user.email, 'testpassword')
     assert !User.authenticate(user.email, 'bs')
   end
 end
