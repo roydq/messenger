@@ -19,6 +19,18 @@ class V1::UsersControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :unprocessable_entity
   end
 
+  test "GET show should return user information" do
+    id = '1234'
+    user = Fabricate.build(:user)
+    User.expects(:find).with(id).returns(user)
+
+    get :show, :id => id, :format => :json
+    assert_response :success
+
+    result = parse_response_body
+    verify_fields_on_json_result(user, result)
+  end
+
   def expected_json_object_fields
     %w(username email created_at updated_at)
   end
