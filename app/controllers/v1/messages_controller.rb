@@ -14,7 +14,7 @@ module V1
       @message = Message.new(params[:message])
 
       if @message.save
-        respond_with(@message, :location => v1_message_url(@message.id))
+        render :action => :show, :location => v1_message_url(@message.id)
       else
         render_model_errors(@message)
       end

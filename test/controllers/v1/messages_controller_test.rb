@@ -11,7 +11,7 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_equal messages.length, result.length
 
     messages.each_with_index do |message, i|
-      verify_fields_on_json_result(message, result)
+      verify_message_json(message, result[i])
     end
   end
 
@@ -30,7 +30,7 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :success
 
     result = parse_response_body
-    verify_fields_on_json_result(message, result)
+    verify_message_json(message, result)
   end
 
   test "POST create should return message data if the message is saved" do
@@ -42,13 +42,20 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :success
 
     result = parse_response_body
-    verify_fields_on_json_result(message, result)
+    verify_message_json(message, result)
   end
 
   test "POST create should return an error if the message was not saved" do
     Message.any_instance.expects(:save).returns(false)
     post :create, :body => 'Test', :format => :json
     assert_response :unprocessable_entity
+  end
+
+  def verify_message_json(message, result)
+    %w(lat lng).each do |coord|
+      assert_equal Float, result[coord].class, "#{coord} was parsed as a #{coord.class.name}, should have been Float"
+    end
+    verify_fields_on_json_result(message, result)
   end
 
   def expected_json_object_fields

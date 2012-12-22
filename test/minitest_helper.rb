@@ -15,6 +15,9 @@ class MiniTest::Rails::ActiveSupport::TestCase
     Oj.load(response.body)
   end
 
+  # For parsing JSON results from an API controller response
+  # WARNING: this will convert values to strings, so you must
+  #          verify data types on your own.
   def verify_fields_on_json_result(object, result)
     expected_json_object_fields.each do |field|
       assert_not_nil user.send(field), "#{field} was not rendered in the api output"
