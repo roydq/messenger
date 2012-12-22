@@ -9,13 +9,21 @@ class TestableController < V1::ApiController
   def test_render_json
     render_json(['one', 'two'], :ok)
   end
+
+  def test_rescue_from_document_not_found
+    raise Mongoid::Errors::DocumentNotFound.new(User, {})
+  end
 end
 
 class TestableControllerTest < MiniTest::Rails::ActionController::TestCase
   before do
     Messenger::Application.routes.draw do
-      match 'test_render_model_errors' => 'testable#test_render_model_errors'
-      match 'test_render_json' => 'testable#test_render_json'
+      [ 'test_render_model_errors',
+        'test_render_json',
+        'test_rescue_from_document_not_found'
+      ].each do |method|
+        match method => "testable##{method}"
+      end
     end
   end
 
@@ -45,5 +53,11 @@ class TestableControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :success
     assert_equal 2, result.length
     assert_equal 'one', result.first
+  end
+
+  test 'rescue from document not found should render a 404' do
+    get :test_rescue_from_document_not_found
+    assert_response :not_found
+    assert_equal "Resource not found", response.body
   end
 end
