@@ -13,6 +13,12 @@ class TestableController < V1::ApiController
   def test_rescue_from_document_not_found
     raise Mongoid::Errors::DocumentNotFound.new(User, {})
   end
+
+  def test_auth_methods
+    @controller_user = current_user
+    @signed_in = signed_in?
+    render :nothing => true
+  end
 end
 
 class TestableControllerTest < MiniTest::Rails::ActionController::TestCase
@@ -20,7 +26,8 @@ class TestableControllerTest < MiniTest::Rails::ActionController::TestCase
     Messenger::Application.routes.draw do
       [ 'test_render_model_errors',
         'test_render_json',
-        'test_rescue_from_document_not_found'
+        'test_rescue_from_document_not_found',
+        'test_auth_methods'
       ].each do |method|
         match method => "testable##{method}"
       end
@@ -59,5 +66,29 @@ class TestableControllerTest < MiniTest::Rails::ActionController::TestCase
     get :test_rescue_from_document_not_found
     assert_response :not_found
     assert_equal "Resource not found", response.body
+  end
+
+  test 'current_user should return the user and signed_in? should return true if logged in' do
+    user = Fabricate.build(:user)
+    User.expects(:where).with(id: user.id).returns([user])
+
+    get :test_auth_methods, nil, {user_id: user.id}
+
+    assert_equal user, assigns(:current_user), '@current_user should have been nil'
+    assert assigns(:signed_in), '@signed_in should have been true'
+    assert_equal user, assigns(:controller_user), '@controller_user should have been the logged in user'
+  end
+
+  test 'current_user should return nil and signed_in? should return false if logged out' do
+    user = Fabricate.build(:user)
+    id = '1234'
+    # twice for both current_user and user_logged_in?
+    User.expects(:where).with(id: id).returns([]).twice
+
+    get :test_auth_methods, nil, {user_id: id}
+
+    assert_nil assigns(:current_user), '@current_user should have been nil'
+    assert !assigns(:signed_in), '@signed_in should have been false'
+    assert_nil assigns(:controller_user), '@controller_user should have been nil'
   end
 end
