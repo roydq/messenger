@@ -2,7 +2,7 @@ module V1
   class ApiController < ApplicationController
     respond_to :json
 
-    helper_method :current_user, :user_signed_in?
+    helper_method :current_user, :signed_in?, :signed_out?
 
     # For some reason I was getting errors if I didn't use a proc here...
     rescue_from Mongoid::Errors::DocumentNotFound do |error|
@@ -18,6 +18,10 @@ module V1
 
     def signed_in?
       !!current_user
+    end
+
+    def signed_out?
+      !signed_in?
     end
 
     private

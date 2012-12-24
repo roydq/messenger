@@ -15,8 +15,9 @@ class TestableController < V1::ApiController
   end
 
   def test_auth_methods
-    @controller_user = current_user
+    @user = current_user
     @signed_in = signed_in?
+    @signed_out = signed_out?
     render :nothing => true
   end
 end
@@ -68,27 +69,51 @@ class TestableControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_equal "Resource not found", response.body
   end
 
-  test 'current_user should return the user and signed_in? should return true if logged in' do
+  test 'current_user should return the user if logged in' do
     user = Fabricate.build(:user)
     User.expects(:where).with(id: user.id).returns([user])
 
     get :test_auth_methods, nil, {user_id: user.id}
-
-    assert_equal user, assigns(:current_user), '@current_user should have been nil'
-    assert assigns(:signed_in), '@signed_in should have been true'
-    assert_equal user, assigns(:controller_user), '@controller_user should have been the logged in user'
+    assert_equal user, assigns(:user), '@user should have been the logged in user'
   end
 
-  test 'current_user should return nil and signed_in? should return false if logged out' do
-    user = Fabricate.build(:user)
+  test 'current_user should return nil if logged out' do
     id = '1234'
-    # twice for both current_user and user_logged_in?
-    User.expects(:where).with(id: id).returns([]).twice
+    User.expects(:where).with(id: id).returns([]).at_least_once
 
     get :test_auth_methods, nil, {user_id: id}
+    assert_nil assigns(:user), '@user should have been nil'
+  end
 
-    assert_nil assigns(:current_user), '@current_user should have been nil'
-    assert !assigns(:signed_in), '@signed_in should have been false'
-    assert_nil assigns(:controller_user), '@controller_user should have been nil'
+  test 'signed_in? should return true if logged in' do
+    user = Fabricate.build(:user)
+    User.expects(:where).with(id: user.id).returns([user])
+
+    get :test_auth_methods, nil, {user_id: user.id}
+    assert_equal true, assigns(:signed_in), '@signed_in should have been true'
+  end
+
+  test 'signed_in? should return false if logged out' do
+    id = '1234'
+    User.expects(:where).with(id: id).returns([]).at_least_once
+
+    get :test_auth_methods, nil, {user_id: id}
+    assert_equal false, assigns(:signed_in), '@signed_in should have been false'
+  end
+
+  test 'signed_out? should return false if logged in' do
+    user = Fabricate.build(:user)
+    User.expects(:where).with(id: user.id).returns([user])
+
+    get :test_auth_methods, nil, {user_id: user.id}
+    assert_equal false, assigns(:signed_out), '@signed_out should have been false'
+  end
+
+  test 'signed_out? should return true if logged out' do
+    id = '1234'
+    User.expects(:where).with(id: id).returns([]).at_least_once
+
+    get :test_auth_methods, nil, {user_id: id}
+    assert_equal true, assigns(:signed_out), '@signed_out should have been true'
   end
 end
