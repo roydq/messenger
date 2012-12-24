@@ -1,4 +1,7 @@
 class V1::SessionsController < V1::ApiController
+  before_filter :signed_in?,  :only => [:destroy]
+  before_filter :signed_out?, :only => [:create]
+
   def create
     if user = User.authenticate(params[:login], params[:password])
       set_logged_in_session_vars(user)

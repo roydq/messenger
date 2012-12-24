@@ -1,5 +1,7 @@
 module V1
   class MessagesController < V1::ApiController
+    before_filter :signed_in?, :only => [:create]
+
     def index
       @messages = Message.all.entries
       respond_with(@messages)

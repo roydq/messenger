@@ -1,42 +1,13 @@
 require 'minitest_helper'
+require 'support/testable_api_controller'
 
-class TestableController < V1::ApiController
-  def test_render_model_errors
-    user = User.first
-    render_model_errors(user)
-  end
-
-  def test_render_json
-    render_json(['one', 'two'], :ok)
-  end
-
-  def test_rescue_from_document_not_found
-    raise Mongoid::Errors::DocumentNotFound.new(User, {})
-  end
-
-  def test_auth_methods
-    @user = current_user
-    @signed_in = signed_in?
-    @signed_out = signed_out?
-    render :nothing => true
-  end
-end
-
-class TestableControllerTest < MiniTest::Rails::ActionController::TestCase
+class TestableApiControllerTest < MiniTest::Rails::ActionController::TestCase
   before do
-    Messenger::Application.routes.draw do
-      [ 'test_render_model_errors',
-        'test_render_json',
-        'test_rescue_from_document_not_found',
-        'test_auth_methods'
-      ].each do |method|
-        match method => "testable##{method}"
-      end
-    end
+    TestableApiController.setup
   end
 
   after do
-    Messenger::Application.reload_routes!
+    TestableApiController.teardown
   end
 
   test 'render_model_errors should render error messages' do
@@ -115,5 +86,12 @@ class TestableControllerTest < MiniTest::Rails::ActionController::TestCase
 
     get :test_auth_methods, nil, {user_id: id}
     assert_equal true, assigns(:signed_out), '@signed_out should have been true'
+  end
+
+  test 'require_user should filter and render an error if user is not logged in' do
+    #User.expects(:where).returns([]).at_least_once
+    get :test_require_user, :format => :json
+
+    assert_response :internal_server_error
   end
 end

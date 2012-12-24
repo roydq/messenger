@@ -9,6 +9,7 @@ module V1
       render_404
     end
 
+    protected
     def current_user
       if session[:user_id]
         @current_user ||= User.where(id: session[:user_id]).first
@@ -38,7 +39,6 @@ module V1
       false
     end
 
-    private
     def render_model_errors(model)
       content = {:message => 'error saving record', :errors => model.errors.full_messages}
       render_json(content, :unprocessable_entity)
