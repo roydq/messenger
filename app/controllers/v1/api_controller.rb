@@ -27,14 +27,12 @@ module V1
 
     def require_user
       return true if signed_in?
-
       respond_with({:error => "Please log in."}, :status => :internal_server_error, :location => nil)
-      false
+      return false
     end
 
     def require_no_user
       return true if signed_out?
-
       respond_with({:error => "Please log out."}, :status => :internal_server_error, :location => nil)
       false
     end

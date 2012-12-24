@@ -9,7 +9,8 @@ class V1::SessionsControllerTest < MiniTest::Rails::ActionController::TestCase
 
     post :create, :login => login, :password => password, :format => :json
     assert_response :success
-    assert_equal 'Login successful', response.body
+    parsed = parse_response_body
+    assert_equal 'Login successful.', parsed['message']
 
     assert_equal user.id, session[:user_id]
     assert_equal user.email, session[:email]
@@ -21,15 +22,32 @@ class V1::SessionsControllerTest < MiniTest::Rails::ActionController::TestCase
 
     post :create, :login => 'asdf', :password => 'asdf', :format => :json
     assert_response :unauthorized
-    assert_equal 'Login failed', response.body
+    parsed = parse_response_body
+    assert_equal 'Login failed.', parsed['message']
   end
 
-  test 'POST destroy should logout' do
-    delete :destroy, :format => :json
+  test 'POST create should fail if the user is already logged in' do
+    current_user = Fabricate.build(:user)
+    login_as(current_user)
+
+    post :create, :login => 'asdf', :password => 'asdf', :format => :json
+    verify_blocked_since_logged_in
+  end
+
+  test 'DELETE destroy should logout' do
+    current_user = Fabricate.build(:user)
+    login_as(current_user)
+
+    post :destroy, :format => :json
     assert_response :success
 
     assert_nil session[:user_id]
     assert_nil session[:email]
     assert_nil session[:username]
+  end
+
+  test 'DELETE destroy should fail if the user is already logged out' do
+    post :destroy, :format => :json
+    verify_blocked_via_auth
   end
 end

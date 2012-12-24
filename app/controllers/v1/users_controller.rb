@@ -1,5 +1,5 @@
 class V1::UsersController < V1::ApiController
-  before_filter :signed_out?, :only => [:create]
+  before_filter :require_no_user, :only => [:create]
 
   def show
     @user = User.find(params[:id])

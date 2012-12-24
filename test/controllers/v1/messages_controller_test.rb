@@ -34,6 +34,9 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "POST create should return message data if the message is saved" do
+    current_user = Fabricate.build(:user)
+    login_as(current_user)
+
     message = Fabricate.build(:message)
     Message.expects(:new).returns(message)
     Message.any_instance.expects(:save).returns(true)
@@ -46,11 +49,16 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "POST create should return an error if the message was not saved" do
+    current_user = Fabricate.build(:user)
+    login_as(current_user)
+
     Message.any_instance.expects(:save).returns(false)
     post :create, :body => 'Test', :format => :json
     assert_response :unprocessable_entity
   end
 
+  # Verifies that all of the fields in the result match up, but also
+  # checks that lat and lng are Floats.
   def verify_message_json(message, result)
     %w(lat lng).each do |coord|
       assert_equal Float, result[coord].class, "#{coord} was parsed as a #{coord.class.name}, should have been Float"

@@ -88,9 +88,7 @@ class TestableApiControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test 'require_user should filter and render an error if user is not logged in' do
     get :test_require_user, :format => :json
-    assert_response :internal_server_error
-    parsed = parse_response_body
-    assert_equal 'Please log in.', parsed['error']
+    verify_blocked_via_auth
   end
 
   test 'require_user should return true if user is logged in' do
@@ -106,9 +104,7 @@ class TestableApiControllerTest < MiniTest::Rails::ActionController::TestCase
     User.expects(:where).with(id: user.id).returns([user])
 
     get :test_require_no_user, {format: :json}, {user_id: user.id}
-    assert_response :internal_server_error
-    parsed = parse_response_body
-    assert_equal 'Please log out.', parsed['error']
+    verify_blocked_since_logged_in
   end
 
   test 'require_no_user should return true if the user is logged out' do

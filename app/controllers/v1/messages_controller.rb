@@ -1,6 +1,6 @@
 module V1
   class MessagesController < V1::ApiController
-    before_filter :signed_in?, :only => [:create]
+    before_filter :require_user, :only => [:create]
 
     def index
       @messages = Message.all.entries
