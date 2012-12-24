@@ -13,6 +13,8 @@ class User
 
   has_secure_password
 
+  has_many :messages
+
   def self.authenticate(id, password)
     if user = self.or({username: id}, {email: id}).first
       return user.try(:authenticate, password)

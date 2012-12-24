@@ -14,6 +14,8 @@ module V1
 
     def create
       @message = Message.new(params[:message])
+      @message.user = current_user
+      @message.username = @message.user.username
 
       if @message.save
         render :action => :show, :location => v1_message_url(@message.id)
