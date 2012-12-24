@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/blowmage/minitest-rails.git
+  revision: 4721dab5a79b53e4153ff753f9a565139d744d5d
+  specs:
+    minitest-rails (0.3.20121102170159)
+      minitest (~> 4.0)
+      rails (~> 3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -57,9 +65,6 @@ GEM
     metaclass (0.0.1)
     mime-types (1.19)
     minitest (4.3.3)
-    minitest-rails (0.3)
-      minitest (~> 4.0)
-      rails (~> 3.0)
     mocha (0.13.1)
       metaclass (~> 0.0.1)
     mongoid (3.0.14)
@@ -129,7 +134,7 @@ DEPENDENCIES
   fabrication
   ffaker
   jquery-rails
-  minitest-rails
+  minitest-rails!
   mocha
   mongoid (~> 3.0.14)
   oj

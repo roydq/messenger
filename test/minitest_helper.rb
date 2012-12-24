@@ -29,5 +29,3 @@ class MiniTest::Rails::ActiveSupport::TestCase
     end
   end
 end
-
-require "mocha/setup"

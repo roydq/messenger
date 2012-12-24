@@ -24,6 +24,20 @@ module V1
       !signed_in?
     end
 
+    def require_user
+      return true if signed_in?
+
+      respond_with("Please log in", :status => :internal_server_error, :location => nil)
+      false
+    end
+
+    def require_no_user
+      return true if signed_out?
+
+      respond_with("Please log out", :status => :internal_server_error, :location => nil)
+      false
+    end
+
     private
     def render_model_errors(model)
       content = {:message => 'error saving record', :errors => model.errors.full_messages}
@@ -35,7 +49,7 @@ module V1
     end
 
     def render_404
-      render :json => "Resource not found", :status => :not_found
+      respond_with("Resource not found", :status => :not_found, :location => nil)
     end
   end
 end

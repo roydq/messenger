@@ -64,7 +64,7 @@ class TestableControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test 'rescue from document not found should render a 404' do
-    get :test_rescue_from_document_not_found
+    get :test_rescue_from_document_not_found, :format => :json
     assert_response :not_found
     assert_equal "Resource not found", response.body
   end

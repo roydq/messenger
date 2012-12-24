@@ -25,7 +25,7 @@ gem 'oj'
 group :test, :development do
   gem 'fabrication'
   gem 'ffaker'
-  gem 'minitest-rails'
+  gem 'minitest-rails', :git => 'https://github.com/blowmage/minitest-rails.git'
   gem 'mocha', :require => false
 end
 
