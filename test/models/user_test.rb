@@ -25,11 +25,23 @@ class UserTest < ActiveSupport::TestCase
     assert user.errors.full_messages.include? "Username can't be blank"
   end
 
+  test "user should require unique username" do
+    user = Fabricate(:user)
+    poser = Fabricate.build(:user, :username => user.username)
+    assert !poser.valid?, 'poser should have been invalid due to duplicate username'
+  end
+
   test "user should require email" do
     user = Fabricate.build(:user)
     user.email = nil
     assert !user.valid?, 'user should have been invalid without email'
     assert user.errors.full_messages.include? "Email can't be blank"
+  end
+
+  test "user should require unique email" do
+    user = Fabricate(:user)
+    poser = Fabricate.build(:user, :email => user.email)
+    assert !poser.valid?, 'poser should have been invalid due to duplicate email'
   end
 
   test "user should authenticate with email or username" do
