@@ -41,4 +41,8 @@ class UserTest < ActiveSupport::TestCase
     assert_equal user, User.authenticate(user.email, 'testpassword')
     assert !User.authenticate(user.email, 'bs')
   end
+
+  test "attribute_names should include password" do
+    assert User.attribute_names.include? 'password'
+  end
 end
