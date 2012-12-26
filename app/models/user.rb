@@ -7,14 +7,10 @@ class User
   field :email, type: String
   field :password_digest, type: String
 
-
   validates_presence_of :password, :on => :create
 
-  validates_presence_of :username
-  validates_uniqueness_of :username
-
-  validates_presence_of :email
-  validates_uniqueness_of :email
+  validates :username, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: true
 
   has_secure_password
 
