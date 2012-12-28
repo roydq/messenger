@@ -3,12 +3,11 @@ require File.expand_path('../../config/environment', __FILE__)
 
 require "minitest/autorun"
 require "minitest/rails"
+require "minitest/pride"
+require 'database_cleaner'
 
 # Uncomment if you want Capybara in accceptance/integration tests
 # require "minitest/rails/capybara"
-
-# Uncomment if you want awesome colorful output
-require "minitest/pride"
 
 class MiniTest::Rails::ActiveSupport::TestCase
   # Only works for ApiController subclasses.
@@ -47,3 +46,14 @@ class MiniTest::Rails::ActiveSupport::TestCase
     assert_equal 'Please log out.', parsed['error']
   end
 end
+
+module MiniTestWithDbClean
+  class Unit < MiniTest::Unit
+    def after_suites
+      DatabaseCleaner.clean
+      super
+    end
+  end
+end
+
+MiniTest::Unit.runner = MiniTestWithDbClean::Unit.new

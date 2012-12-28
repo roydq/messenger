@@ -27,6 +27,7 @@ group :test, :development do
   gem 'ffaker'
   gem 'minitest-rails', :git => 'https://github.com/blowmage/minitest-rails.git'
   gem 'mocha', :require => false
+  gem 'database_cleaner'
 end
 
 # To use ActiveModel has_secure_password
