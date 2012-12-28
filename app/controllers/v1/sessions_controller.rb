@@ -3,15 +3,14 @@ class V1::SessionsController < V1::ApiController
   before_filter :require_no_user, :only => [:create]
 
   def show
-    @user_id = session[:user_id]
-    @username = session[:username]
-    @created_at = session[:created_at]
+    set_session_assigns
   end
 
   def create
     if user = User.authenticate(params[:login], params[:password])
       set_logged_in_session_vars(user)
-      respond_with({:message => "Login successful."}, :location => v1_user_url(user.id)) and return
+      set_session_assigns
+      render :action => :show, :location => v1_session_url and return
     end
 
     respond_with({:message => "Login failed."}, :location => v1_session_url, :status => :unauthorized)
@@ -34,5 +33,11 @@ class V1::SessionsController < V1::ApiController
     %w(user_id username email created_at).each do |key|
       session.delete(key)
     end
+  end
+
+  def set_session_assigns
+    @user_id = session[:user_id]
+    @username = session[:username]
+    @created_at = session[:created_at]
   end
 end

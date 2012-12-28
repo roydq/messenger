@@ -3,17 +3,14 @@ require "minitest_helper"
 class V1::SessionsControllerTest < MiniTest::Rails::ActionController::TestCase
   test 'GET show should return info about the current session' do
     current_user = Fabricate.build(:user)
+
     time = Time.current
     Time.expects(:current).returns(time)
+
     login_as(current_user)
 
-    expected_session = OpenStruct.new
-    expected_session.created_at = time
-    expected_session.username = current_user.username
-    expected_session.id = current_user.id
+    expected_session = get_session_struct(current_user, time)
 
-    #login_as(current_user)
-    #
     get :show, :format => :json
     assert_response :success
 
@@ -26,13 +23,17 @@ class V1::SessionsControllerTest < MiniTest::Rails::ActionController::TestCase
     login = 'asdf@griggle.com'
     user = Fabricate.build(:user, :email => login, :password => password)
     User.expects(:authenticate).with(login, password).returns(user)
+
     time = Time.current
     Time.expects(:current).returns(time)
 
+    expected_session = get_session_struct(user, time)
+
     post :create, :login => login, :password => password, :format => :json
     assert_response :success
-    parsed = parse_response_body
-    assert_equal 'Login successful.', parsed['message']
+
+    result = parse_response_body
+    verify_fields_on_json_result(expected_session, result)
 
     assert_equal user.id, session[:user_id]
     assert_equal user.email, session[:email]
@@ -77,5 +78,15 @@ class V1::SessionsControllerTest < MiniTest::Rails::ActionController::TestCase
 
   def expected_json_object_fields
     %w(created_at username id)
+  end
+
+  # Returns a struct that represents session data.
+  # Useful to testing.
+  def get_session_struct(user, time)
+    expected_session = OpenStruct.new
+    expected_session.created_at = time
+    expected_session.username = user.username
+    expected_session.id = user.id
+    expected_session
   end
 end
