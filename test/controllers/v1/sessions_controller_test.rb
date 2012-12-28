@@ -18,6 +18,11 @@ class V1::SessionsControllerTest < MiniTest::Rails::ActionController::TestCase
     verify_fields_on_json_result(expected_session, result)
   end
 
+  test 'GET show should require logged in user' do
+    get :show, :format => :json
+    assert_response :internal_server_error
+  end
+
   test 'POST create should login if credentals are valid' do
     password = 'test123'
     login = 'asdf@griggle.com'
@@ -47,7 +52,7 @@ class V1::SessionsControllerTest < MiniTest::Rails::ActionController::TestCase
     post :create, :login => 'asdf', :password => 'asdf', :format => :json
     assert_response :unauthorized
     parsed = parse_response_body
-    assert_equal 'Login failed.', parsed['message']
+    assert_equal 'Login failed.', parsed['error']
   end
 
   test 'POST create should fail if the user is already logged in' do
