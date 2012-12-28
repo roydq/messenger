@@ -75,6 +75,6 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   def expected_json_object_fields
-    %w(body lat lng author)
+    %w(body lat lng username user_id)
   end
 end

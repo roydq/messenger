@@ -12,7 +12,12 @@ require 'database_cleaner'
 class MiniTest::Rails::ActiveSupport::TestCase
   # Only works for ApiController subclasses.
   def login_as(user)
-    session[:user_id] = user
+    # Copied from sessions_controller#set_logged_in_session_vars
+    # TODO: extract
+    session[:user_id] = user.id
+    session[:username] = user.username
+    session[:email] = user.email
+    session[:created_at] = Time.current
     @controller.expects(:current_user).returns(user).at_least(0)
   end
 
@@ -25,8 +30,8 @@ class MiniTest::Rails::ActiveSupport::TestCase
   #          verify data types on your own.
   def verify_fields_on_json_result(object, result)
     expected_json_object_fields.each do |field|
-      assert_not_nil user.send(field), "#{field} was not rendered in the api output"
-      assert_equal user.send(field).as_json, result[field].to_s, "#{field} was unexpected"
+      assert_not_nil object.send(field), "#{field} was not rendered in the api output"
+      assert_equal object.send(field).as_json, result[field].to_s, "#{field} was unexpected"
     end
   rescue NameError => e
     if e.message.include? 'expected_json_object_fields'
