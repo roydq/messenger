@@ -2,6 +2,12 @@ class V1::SessionsController < V1::ApiController
   before_filter :require_user, :only => [:destroy]
   before_filter :require_no_user, :only => [:create]
 
+  def show
+    @user_id = session[:user_id]
+    @username = session[:username]
+    @created_at = session[:created_at]
+  end
+
   def create
     if user = User.authenticate(params[:login], params[:password])
       set_logged_in_session_vars(user)
@@ -21,10 +27,11 @@ class V1::SessionsController < V1::ApiController
     session[:user_id] = user.id
     session[:username] = user.username
     session[:email] = user.email
+    session[:created_at] = Time.current
   end
 
   def clear_logged_in_session_vars
-    %w(user_id username email).each do |key|
+    %w(user_id username email created_at).each do |key|
       session.delete(key)
     end
   end
