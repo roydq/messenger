@@ -1,6 +1,11 @@
 require "minitest_helper"
 
 class V1::SessionsControllerTest < MiniTest::Rails::ActionController::TestCase
+  test 'GET show should require logged in user' do
+    get :show, :format => :json
+    verify_blocked_via_auth
+  end
+
   test 'GET show should return info about the current session' do
     current_user = Fabricate.build(:user)
 
@@ -16,11 +21,6 @@ class V1::SessionsControllerTest < MiniTest::Rails::ActionController::TestCase
 
     result = parse_response_body
     verify_fields_on_json_result(expected_session, result)
-  end
-
-  test 'GET show should require logged in user' do
-    get :show, :format => :json
-    assert_response :internal_server_error
   end
 
   test 'POST create should login if credentals are valid' do

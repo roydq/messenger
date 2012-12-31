@@ -10,15 +10,19 @@ class V1::SessionsController < V1::ApiController
     if user = User.authenticate(params[:login], params[:password])
       set_logged_in_session_vars(user)
       set_session_assigns
-      render :action => :show, :location => v1_session_url and return
+      render :action => :show, :location => v1_session_url, :status => :created and return
     end
 
-    respond_with({:message => "Login failed."}, :location => v1_session_url, :status => :unauthorized)
+    respond_to do |f|
+      f.json { render :json => {:message => "Login failed."}, :status => :unauthorized }
+    end
   end
 
   def destroy
     clear_logged_in_session_vars
-    respond_with({:message => "Logout successful."}, :location => nil)
+    respond_to do |f|
+      f.json { render :json => {:message => "Logout successful."} }
+    end
   end
 
   private

@@ -27,27 +27,31 @@ module V1
 
     def require_user
       return true if signed_in?
-      respond_with({:message => "Please log in."}, :status => :internal_server_error, :location => nil)
-      return false
+      respond_to do |f|
+        f.json { render :json => {:message => "Please log in."}, :status => :internal_server_error }
+      end
+      false
     end
 
     def require_no_user
       return true if signed_out?
-      respond_with({:message => "Please log out."}, :status => :internal_server_error, :location => nil)
+      respond_to do |f|
+        f.json { render :json => {:message => "Please log out."}, :status => :internal_server_error }
+      end
       false
     end
 
     def render_model_errors(model)
       content = {:message => 'Unable to save object.', :details => model.errors.full_messages}
-      respond_with(content, :location => nil, :status => :unprocessable_entity)
+      respond_to do |f|
+        f.json { render :json => content, :status => :unprocessable_entity }
+      end
     end
 
     def render_404
-      respond_with({:message => "Resource not found."}, :status => :not_found, :location => nil)
-    end
-
-    def respond_with_hash(hash, status, location=nil)
-      respond_with(hash, :status => status, :location => location)
+      respond_to do |f|
+        f.json { render :json => {:message => "Resource not found."}, :status => :not_found }
+      end
     end
   end
 end
