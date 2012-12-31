@@ -52,7 +52,7 @@ class V1::SessionsControllerTest < MiniTest::Rails::ActionController::TestCase
     post :create, :login => 'asdf', :password => 'asdf', :format => :json
     assert_response :unauthorized
     parsed = parse_response_body
-    assert_equal 'Login failed.', parsed['error']
+    assert_equal 'Login failed.', parsed['message']
   end
 
   test 'POST create should fail if the user is already logged in' do

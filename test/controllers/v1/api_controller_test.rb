@@ -15,30 +15,20 @@ class TestableApiControllerTest < MiniTest::Rails::ActionController::TestCase
     user.valid?
     User.expects(:first).returns(user)
 
-    get :test_render_model_errors
-    result = parse_response_body
-
+    get :test_render_model_errors, :format => :json
     assert_response :unprocessable_entity
 
-    assert result["error"] = 'Unable to save object.'
+    result = parse_response_body
+    assert result["message"] = 'Unable to save object.'
     assert_equal 1, result["details"].length
     assert_equal user.errors.full_messages.first, result["details"].first
-  end
-
-  test 'render json should render some json' do
-    get :test_render_json
-    result = parse_response_body
-
-    assert_response :success
-    assert_equal 2, result.length
-    assert_equal 'one', result.first
   end
 
   test 'rescue from document not found should render a 404' do
     get :test_rescue_from_document_not_found, :format => :json
     assert_response :not_found
     parsed = parse_response_body
-    assert_equal 'Resource not found.', parsed['error']
+    assert_equal 'Resource not found.', parsed['message']
   end
 
   test 'current_user should return the user if logged in' do

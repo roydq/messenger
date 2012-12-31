@@ -13,7 +13,7 @@ class V1::SessionsController < V1::ApiController
       render :action => :show, :location => v1_session_url and return
     end
 
-    respond_with({:error => "Login failed."}, :location => v1_session_url, :status => :unauthorized)
+    respond_with({:message => "Login failed."}, :location => v1_session_url, :status => :unauthorized)
   end
 
   def destroy

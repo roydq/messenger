@@ -9,10 +9,6 @@ class TestableApiController < V1::ApiController
     render_model_errors(user)
   end
 
-  def test_render_json
-    render_json(['one', 'two'], :ok)
-  end
-
   def test_rescue_from_document_not_found
     raise Mongoid::Errors::DocumentNotFound.new(User, {})
   end
