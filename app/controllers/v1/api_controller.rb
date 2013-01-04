@@ -42,7 +42,7 @@ module V1
     end
 
     def render_model_errors(model)
-      content = {:message => 'Unable to save object.', :details => model.errors.full_messages}
+      content = {:message => 'Unable to save object.', :details => model.errors}
       respond_to do |f|
         f.json { render :json => content, :status => :internal_server_error }
       end

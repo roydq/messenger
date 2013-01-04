@@ -21,7 +21,7 @@ class TestableApiControllerTest < MiniTest::Rails::ActionController::TestCase
     result = parse_response_body
     assert result["message"] = 'Unable to save object.'
     assert_equal 1, result["details"].length
-    assert_equal user.errors.full_messages.first, result["details"].first
+    assert_equal user.errors[:username], result["details"]["username"]
   end
 
   test 'rescue from document not found should render a 404' do
