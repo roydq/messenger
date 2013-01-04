@@ -16,7 +16,7 @@ class V1::UsersControllerTest < MiniTest::Rails::ActionController::TestCase
   test "POST create should return an error if the user was not saved" do
     User.any_instance.expects(:save).returns(false)
     post :create, :body => 'Test', :format => :json
-    assert_response :unprocessable_entity
+    assert_response :internal_server_error
   end
 
   test "GET show should return user information" do
