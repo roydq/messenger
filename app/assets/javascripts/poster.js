@@ -18,11 +18,7 @@ $(document).ready(function () {
       headers: {
         'Accept' : 'application/json'
       },
-      success: function (result) {
-        $('#status').html('');
-        $('#results').html(result);
-      },
-      error: function (xhr, textStatus) {
+      complete: function (xhr, textStatus) {
         $('#status').html(textStatus);
         $('#results').html(xhr.responseText);
       }
