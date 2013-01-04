@@ -19,8 +19,8 @@ $(document).ready(function () {
         'Accept' : 'application/json'
       },
       complete: function (xhr, textStatus) {
-        $('#status').html(textStatus);
-        $('#results').html(xhr.responseText);
+        $('#status').html("Status: " + textStatus);
+        $('#results').html(JSON.stringify($.parseJSON(xhr.responseText), null, 2));
       }
     });
   });

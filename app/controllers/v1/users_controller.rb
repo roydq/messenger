@@ -14,4 +14,13 @@ class V1::UsersController < V1::ApiController
       render_model_errors(@user)
     end
   end
+
+  def validate
+    user = User.new(params[:user])
+    if user.valid?
+      head :ok
+    else
+      render_model_errors(user)
+    end
+  end
 end

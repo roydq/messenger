@@ -15,7 +15,7 @@ class V1::UsersControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test "POST create should return an error if the user was not saved" do
     User.any_instance.expects(:save).returns(false)
-    post :create, :body => 'Test', :format => :json
+    post :create, :username => 'test', :format => :json
     assert_response :internal_server_error
   end
 
@@ -29,6 +29,18 @@ class V1::UsersControllerTest < MiniTest::Rails::ActionController::TestCase
 
     result = parse_response_body
     verify_fields_on_json_result(user, result)
+  end
+
+  test "POST validate should be successful if the user is valid" do
+    User.any_instance.expects(:valid?).returns(false)
+    post :validate, :username => 'Test', :format => :json
+    assert_response :internal_server_error
+  end
+
+  test "POST validate should return an error if the user was not valid" do
+    User.any_instance.expects(:valid?).returns(true)
+    post :validate, :username => 'Test', :format => :json
+    assert_response :success
   end
 
   def expected_json_object_fields

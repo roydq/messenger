@@ -1,27 +1,28 @@
 <form action="#">
   <p>
-    <label for="url">Url</label>
-    <br />
+    <label for="url">Url</label><br />
     <input name="url" id="url" type="text" style="width: 600px" />
   </p>
 
   <p>
-    <label for="type">Type</label>
-    <br />
-    <input name="type" id="type" type="text" style="width: 600px" />
+    <label for="type">Type</label><br />
+    <select name="type" id="type">
+      <option value="GET">GET</option>
+      <option value="POST">POST</option>
+      <option value="PUT">PUT</option>
+      <option value="DELETE">DELETE</option>
+    </select>
   </p>
 
   <p>
-    <label for="body">Body</label>
-    <br />
+    <label for="body">Body</label><br />
     <textarea name="body" id="body" cols="100" rows="20"></textarea>
   </p>
 
-  <input id="derp" type="submit" value="Post" />
+  <input id="derp" type="submit" value="Send" />
 </form>
-
 <br />
 <br />
 
-<b id="status"></b>
+<p id="status"></p>
 <pre id="results"></pre>
