@@ -6,6 +6,7 @@ class Message
   field :username, type: String
   field :lat, type: BigDecimal
   field :lng, type: BigDecimal
+  field :location, type: String
 
   validates_presence_of :body
 
