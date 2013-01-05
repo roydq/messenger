@@ -1,5 +1,7 @@
 module V1
   class ApiController < ApplicationController
+    skip_before_filter :verify_authenticity_token, if: :json_request?
+
     respond_to :json
 
     helper_method :current_user, :signed_in?, :signed_out?
@@ -52,6 +54,10 @@ module V1
       respond_to do |f|
         f.json { render :json => {:message => "Resource not found."}, :status => :not_found }
       end
+    end
+
+    def json_request?
+      request.format.json?
     end
   end
 end
