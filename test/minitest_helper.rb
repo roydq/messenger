@@ -40,13 +40,13 @@ class MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def verify_blocked_via_auth
-    assert_response :internal_server_error
+    assert_response :unauthorized
     parsed = parse_response_body
     assert_equal 'Please log in.', parsed['message']
   end
 
   def verify_blocked_since_logged_in
-    assert_response :internal_server_error
+    assert_response :unauthorized
     parsed = parse_response_body
     assert_equal 'Please log out.', parsed['message']
   end

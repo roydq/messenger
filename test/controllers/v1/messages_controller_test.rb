@@ -54,7 +54,7 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
 
     Message.any_instance.expects(:save).returns(false)
     post :create, :body => 'Test', :format => :json
-    assert_response :internal_server_error
+    assert_response :unprocessable_entity
   end
 
   # Verifies that all of the fields in the result match up, but also

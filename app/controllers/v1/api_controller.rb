@@ -30,7 +30,7 @@ module V1
     def require_user
       return true if signed_in?
       respond_to do |f|
-        f.json { render :json => {:message => "Please log in."}, :status => :internal_server_error }
+        f.json { render :json => {:message => "Please log in."}, :status => :unauthorized }
       end
       false
     end
@@ -38,7 +38,7 @@ module V1
     def require_no_user
       return true if signed_out?
       respond_to do |f|
-        f.json { render :json => {:message => "Please log out."}, :status => :internal_server_error }
+        f.json { render :json => {:message => "Please log out."}, :status => :unauthorized }
       end
       false
     end
@@ -46,7 +46,7 @@ module V1
     def render_model_errors(model)
       content = {:message => 'Unable to save object.', :details => model.errors}
       respond_to do |f|
-        f.json { render :json => content, :status => :internal_server_error }
+        f.json { render :json => content, :status => :unprocessable_entity }
       end
     end
 

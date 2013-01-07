@@ -16,7 +16,7 @@ class TestableApiControllerTest < MiniTest::Rails::ActionController::TestCase
     User.expects(:first).returns(user)
 
     get :test_render_model_errors, :format => :json
-    assert_response :internal_server_error
+    assert_response :unprocessable_entity
 
     result = parse_response_body
     assert result["message"] = 'Unable to save object.'

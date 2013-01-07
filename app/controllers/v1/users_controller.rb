@@ -9,7 +9,7 @@ class V1::UsersController < V1::ApiController
     @user = User.new(params[:user])
 
     if @user.save
-      render :show, :location => v1_user_url(@user.id)
+      render :show, :location => v1_user_url(@user.id), :status => :created
     else
       render_model_errors(@user)
     end

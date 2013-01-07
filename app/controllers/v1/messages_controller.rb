@@ -18,7 +18,7 @@ module V1
       @message.username = @message.user.username
 
       if @message.save
-        render :action => :show, :location => v1_message_url(@message.id)
+        render :action => :show, :location => v1_message_url(@message.id), :status => :created
       else
         render_model_errors(@message)
       end
