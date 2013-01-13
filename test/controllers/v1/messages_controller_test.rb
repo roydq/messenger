@@ -59,22 +59,22 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
 
   # Verifies that all of the fields in the result match up, but also
   # verifies some other things.
-  def verify_message_json(message, result, current_user=nil)
-    %w(lat lng).each do |coord|
-      assert_equal Float, result[coord].class, "#{coord} was parsed as a #{coord.class.name}, should have been Float"
-    end
+  def verify_message_json(message, result, posting_user=nil)
+    verify_fields_on_json_result(message, result)
 
     # pass current user if you're testing to verify that fields were
     # pulled in from the logged-in user
-    if current_user
-      assert_equal current_user.id.to_s, result['user_id']
-      assert_equal current_user.username, result['username']
+    if posting_user
+      assert_equal posting_user.id.to_s, result['user_id']
+      assert_equal posting_user.username, result['username']
     end
 
-    verify_fields_on_json_result(message, result)
+    result['coordinates'].each do |coord|
+      assert_equal Float, coord.class, "#{coord} was parsed as a #{coord.class.name}, should have been Float"
+    end
   end
 
   def expected_json_object_fields
-    %w(body lat lng username user_id location)
+    %w(body location username user_id)
   end
 end

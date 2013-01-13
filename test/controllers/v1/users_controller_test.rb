@@ -1,6 +1,11 @@
 require "minitest_helper"
 
 class V1::UsersControllerTest < MiniTest::Rails::ActionController::TestCase
+  before do
+    # Well, why not?
+    User.destroy_all
+  end
+
   test "POST create should return user data if the user is saved" do
     user = Fabricate.build(:user)
     User.expects(:new).returns(user)

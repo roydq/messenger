@@ -2,17 +2,15 @@ class Message
   include Mongoid::Document
   include Mongoid::Timestamps::Updated
 
-  field :body, type: String
-  field :username, type: String
-  field :lat, type: BigDecimal
-  field :lng, type: BigDecimal
-  field :location, type: String
+  field :body,        type: String
+  field :username,    type: String
+  field :coordinates, type: Array
+  field :location,    type: String
 
-  validates_presence_of :body
-  validates_presence_of :lat
-  validates_presence_of :lng
-  validates_presence_of :location
-  validates_presence_of :username
+  validates :body, :presence => true
+  validates :coordinates, :presence => true
+  validates :location, :presence => true
+  validates :username, :presence => true
 
   belongs_to :user
 end

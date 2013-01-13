@@ -13,18 +13,11 @@ class MessageTest < MiniTest::Rails::ActiveSupport::TestCase
     assert message.errors.full_messages.include? "Body can't be blank"
   end
 
-  test "message should require lat" do
+  test "message should require coordinates" do
     message = Fabricate.build(:message)
-    message.lat = nil
-    assert !message.valid?, 'message should have been invalid without a lat'
-    assert message.errors.full_messages.include? "Lat can't be blank"
-  end
-
-  test "message should require lng" do
-    message = Fabricate.build(:message)
-    message.lng = nil
-    assert !message.valid?, 'message should have been invalid without a lng'
-    assert message.errors.full_messages.include? "Lng can't be blank"
+    message.coordinates = nil
+    assert !message.valid?, 'message should have been invalid without coordinates'
+    assert message.errors.full_messages.include? "Coordinates can't be blank"
   end
 
   test "message should require location" do
