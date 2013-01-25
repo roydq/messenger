@@ -23,5 +23,8 @@ module V1
         render_model_errors(@message)
       end
     end
+
+    def nearby
+    end
   end
 end

@@ -81,7 +81,7 @@ test:
         retry_interval: 0
 
 <% if ENV['MONGOLAB_URI'] %>
-  <% uri = URI.parse(ENV['MONGOLAB_URI']) %>
+<% uri = URI.parse(ENV['MONGOLAB_URI']) %>
 production:
   sessions:
     default:

@@ -57,6 +57,9 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :unprocessable_entity
   end
 
+  test "GET nearby should return messages near a set of coordinates" do
+  end
+
   # Verifies that all of the fields in the result match up, but also
   # verifies some other things.
   def verify_message_json(message, result, posting_user=nil)
@@ -75,6 +78,6 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   def expected_json_object_fields
-    %w(body location username user_id)
+    %w(body location username user_id created_at)
   end
 end
