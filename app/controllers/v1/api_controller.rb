@@ -12,6 +12,13 @@ module V1
     end
 
     protected
+    def set_logged_in_session_vars(user)
+      session[:user_id] = user.id
+      session[:username] = user.username
+      session[:email] = user.email
+      session[:created_at] = Time.current
+    end
+
     def current_user
       if session[:user_id]
         @current_user ||= User.where(id: session[:user_id]).first
