@@ -1,6 +1,11 @@
 require 'minitest_helper'
 
 class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
+  setup do
+    @current_user = Fabricate.build(:user)
+    login_as(@current_user)
+  end
+
   test "GET index should load all messsages" do
     messages = [Fabricate.build(:message), Fabricate.build(:message)]
     Message.expects(:all).returns(stub(:entries => messages))
@@ -34,9 +39,6 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "POST create should return message data if the message is saved" do
-    current_user = Fabricate.build(:user)
-    login_as(current_user)
-
     message = Fabricate.build(:message)
     Message.expects(:new).returns(message)
     Message.any_instance.expects(:save).returns(true)
@@ -45,13 +47,10 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :success
 
     result = parse_response_body
-    verify_message_json(message, result, current_user)
+    verify_message_json(message, result, @current_user)
   end
 
   test "POST create should return an error if the message was not saved" do
-    current_user = Fabricate.build(:user)
-    login_as(current_user)
-
     Message.any_instance.expects(:save).returns(false)
     post :create, :body => 'Test', :format => :json
     assert_response :unprocessable_entity
