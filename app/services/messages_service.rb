@@ -1,9 +1,9 @@
 class MessagesService
-  attr_accessor :messages_data
-
   def initialize(messages_data)
     @messages_data = messages_data
   end
+
+  attr_accessor :messages_data
 
   def get_messages_near_coordinates(latitude, longitude, distance_in_miles=50, page=1)
     distance_radians = miles_to_radians(distance_in_miles)
@@ -12,6 +12,14 @@ class MessagesService
 
   def get_message_by_id(id)
     messages_data.find(id)
+  end
+
+  def create_message(attributes, user)
+    message = messages_data.new(attributes)
+    message.user = user
+    message.username = user.username
+    message.save
+    message
   end
 
   private

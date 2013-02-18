@@ -20,4 +20,20 @@ class MessagesServiceTest < MiniTest::Rails::ActiveSupport::TestCase
 
     @messages_service.get_messages_near_coordinates(latitude, longitude, distance, page)
   end
+
+  test "get_message_by_id should try to find message by id" do
+    @data_stub.expects(:find).with(1)
+    @messages_service.get_message_by_id(1)
+  end
+
+  test "create_message should try to save a message and return the message" do
+    message = Message.new
+    user = User.new(:username => 'test')
+    message.expects(:user=).with(user)
+    message.expects(:username=).with(user.username)
+    message.expects(:save).returns(true)
+    @data_stub.expects(:new).returns(message)
+
+    @messages_service.create_message({:body => 'derp'}, user)
+  end
 end
