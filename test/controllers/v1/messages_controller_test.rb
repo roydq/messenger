@@ -6,11 +6,19 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
     login_as(@current_user)
   end
 
-  test "GET index should load all messsages" do
-    messages = [Fabricate.build(:message), Fabricate.build(:message)]
-    Message.expects(:all).returns(stub(:entries => messages))
-
+  test "GET index should require lat and lng params" do
     get :index, :format => :json
+    assert_response :bad_request
+  end
+
+  test "GET index should load nearby messages if lat and lng are provided" do
+    messages = [Fabricate.build(:message), Fabricate.build(:message)]
+
+    # TODO: maybe there's a better way to do this
+    @controller.messages_service.expects(:get_messages_near_coordinates).with(10, 10, nil, nil).returns(messages)
+
+    get :index, :lat => 10, :lng => 10, :format => :json
+    assert_response :success
     result = parse_response_body
 
     assert_equal messages.length, result.length
@@ -20,16 +28,9 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
     end
   end
 
-  test "GET index should do nothing if there are no messages" do
-    Message.expects(:all).returns(stub(:entries => nil))
-
-    get :index, :format => :json
-    assert_response :success
-  end
-
   test "GET show should return message by id" do
     message = Fabricate.build(:message)
-    Message.expects(:find).with(message.id.to_s).returns(message)
+    @controller.messages_service.expects(:get_message_by_id).with(message.id.to_s).returns(message)
 
     get :show, :id => message.id.to_s, :format => :json
     assert_response :success
@@ -39,11 +40,13 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "POST create should return message data if the message is saved" do
-    message = Fabricate.build(:message)
-    Message.expects(:new).returns(message)
-    Message.any_instance.expects(:save).returns(true)
+    message = Fabricate.build(:message, :user => @current_user, :username => @current_user.username)
+    params = {:message => {'body' => 'Test'}, :format => :json}
 
-    post :create, :body => 'Test', :format => :json
+    @controller.messages_service.expects(:create_message).with(params[:message], @current_user).returns(message)
+    message.expects(:persisted?).returns(true)
+
+    post :create, params, :format => :json
     assert_response :success
 
     result = parse_response_body
@@ -51,12 +54,16 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "POST create should return an error if the message was not saved" do
-    Message.any_instance.expects(:save).returns(false)
-    post :create, :body => 'Test', :format => :json
-    assert_response :unprocessable_entity
-  end
+    unsaved_message = stub('unsaved message', {
+      :persisted? => false,
+      :errors => ['Username is stupid']
+    })
+    params = {:message => {'invalid' => 'invalid'}, :format => :json}
 
-  test "GET nearby should return messages near a set of coordinates" do
+    @controller.messages_service.expects(:create_message).with(params[:message], @current_user).returns(unsaved_message)
+
+    post :create, params
+    assert_response :unprocessable_entity
   end
 
   # Verifies that all of the fields in the result match up, but also

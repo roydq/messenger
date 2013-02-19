@@ -57,6 +57,12 @@ module V1
       end
     end
 
+    def render_bad_request_error(content)
+      respond_to do |f|
+        f.json { render :json => content, :status => :bad_request }
+      end
+    end
+
     def render_404
       respond_to do |f|
         f.json { render :json => {:message => "Resource not found."}, :status => :not_found }

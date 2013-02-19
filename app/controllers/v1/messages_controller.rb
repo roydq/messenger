@@ -3,28 +3,32 @@ module V1
     before_filter :require_user
 
     def index
-      @messages = Message.all.entries
+      if params[:lat].blank? || params[:lng].blank?
+        render_bad_request_error('lat and lng are required parameters') and return
+      end
+
+      @messages = messages_service.get_messages_near_coordinates(params[:lat], params[:lng], params[:distance], params[:page])
       respond_with(@messages)
     end
 
     def show
-      @message = Message.find(params[:id])
+      @message = messages_service.get_message_by_id(params[:id])
       respond_with(@message)
     end
 
     def create
-      @message = Message.new(params[:message])
-      @message.user = current_user
-      @message.username = @message.user.username
+      @message = messages_service.create_message(params[:message], current_user)
 
-      if @message.save
+      if @message.persisted?
         render :action => :show, :location => v1_message_url(@message.id), :status => :created
       else
         render_model_errors(@message)
       end
     end
 
-    def nearby
+    attr_accessor :messages_service
+    def messages_service
+      @messages_service ||= MessagesService.new(Message)
     end
   end
 end
