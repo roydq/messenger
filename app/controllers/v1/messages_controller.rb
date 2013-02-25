@@ -7,7 +7,10 @@ module V1
         render_bad_request_error('lat and lng are required parameters') and return
       end
 
-      @messages = messages_service.get_messages_near_coordinates(params[:lat], params[:lng], params[:distance], params[:page])
+      lat = params[:lat].to_f
+      lng = params[:lng].to_f
+
+      @messages = messages_service.get_messages_near_coordinates(lat, lng, params[:distance], params[:page])
       respond_with(@messages)
     end
 
