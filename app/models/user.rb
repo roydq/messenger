@@ -7,8 +7,8 @@ class User
   field :email, type: String
   field :password_digest, type: String
 
-  index({username: 1}, {background: true})
-  index({email: 1}, {background: true})
+  index({username: 1}, {unique: true})
+  index({email: 1})
 
   validates_presence_of :password, :on => :create
 

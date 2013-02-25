@@ -7,7 +7,7 @@ class Message
   field :coordinates, type: Array
   field :location,    type: String
 
-  index({location: "2d"}, {background: true})
+  index({location: "2d"})
 
   validates :body, :presence => true
   validates :coordinates, :presence => true
