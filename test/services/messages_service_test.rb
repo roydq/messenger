@@ -15,8 +15,9 @@ class MessagesServiceTest < MiniTest::Rails::ActiveSupport::TestCase
 
     circle_query_stub = stub(:query)
     result_stub = stub(:result)
-    @data_stub.expects(:within_circle).with([latitude, longitude], distance_radians).returns(circle_query_stub)
+    @data_stub.expects(:within_circle).with(coordinates: [[latitude, longitude], distance_radians]).returns(circle_query_stub)
     circle_query_stub.expects(:page).with(2).returns(result_stub)
+    result_stub.expects(:entries)
 
     @messages_service.get_messages_near_coordinates(latitude, longitude, distance, page)
   end
@@ -28,8 +29,9 @@ class MessagesServiceTest < MiniTest::Rails::ActiveSupport::TestCase
 
     circle_query_stub = stub(:query)
     result_stub = stub(:result)
-    @data_stub.expects(:within_circle).with([latitude, longitude], distance_radians).returns(circle_query_stub)
+    @data_stub.expects(:within_circle).with(coordinates: [[latitude, longitude], distance_radians]).returns(circle_query_stub)
     circle_query_stub.expects(:page).with(nil).returns(result_stub)
+    result_stub.expects(:entries)
 
     @messages_service.get_messages_near_coordinates(latitude, longitude, nil, nil)
   end
