@@ -21,6 +21,19 @@ class MessagesServiceTest < MiniTest::Rails::ActiveSupport::TestCase
     @messages_service.get_messages_near_coordinates(latitude, longitude, distance, page)
   end
 
+  test 'get_messages_near_coordinates should work even if distance or page are nil' do
+    latitude = 10
+    longitude = 10
+    distance_radians = 50/3963.192
+
+    circle_query_stub = stub(:query)
+    result_stub = stub(:result)
+    @data_stub.expects(:within_circle).with([latitude, longitude], distance_radians).returns(circle_query_stub)
+    circle_query_stub.expects(:page).with(nil).returns(result_stub)
+
+    @messages_service.get_messages_near_coordinates(latitude, longitude, nil, nil)
+  end
+
   test "get_message_by_id should try to find message by id" do
     @data_stub.expects(:find).with(1)
     @messages_service.get_message_by_id(1)
