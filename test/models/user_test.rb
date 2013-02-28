@@ -50,6 +50,12 @@ class UserTest < ActiveSupport::TestCase
     assert !poser.valid?, 'poser should have been invalid due to duplicate email (different case)'
   end
 
+  test "user should require an email that is an email" do
+    user = Fabricate.build(:user)
+    user.email = 'dicks'
+    assert !user.valid?, 'user should have been invalid with an invalid email'
+  end
+
   test "user should authenticate with email or username" do
     user = Fabricate(:user, :password => 'testpassword')
 

@@ -12,8 +12,8 @@ class User
 
   validates_presence_of :password, :on => :create
 
-  validates :username, presence: true, uniqueness: {case_sensitive: false}
-  validates :email, presence: true, uniqueness: {case_sensitive: false}
+  validates :username, presence: true, uniqueness: {case_sensitive: false}, length: { maximum: 15 }
+  validates :email, presence: true, uniqueness: {case_sensitive: false}, format: { with: /.+@.+\..+/, :on => :create }
 
   has_secure_password
 
