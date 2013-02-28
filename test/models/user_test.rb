@@ -29,6 +29,9 @@ class UserTest < ActiveSupport::TestCase
     user = Fabricate(:user)
     poser = Fabricate.build(:user, :username => user.username)
     assert !poser.valid?, 'poser should have been invalid due to duplicate username'
+
+    poser.username.upcase!
+    assert !poser.valid?, 'poser should have been invalid due to duplicate username (different case)'
   end
 
   test "user should require email" do
@@ -42,6 +45,9 @@ class UserTest < ActiveSupport::TestCase
     user = Fabricate(:user)
     poser = Fabricate.build(:user, :email => user.email)
     assert !poser.valid?, 'poser should have been invalid due to duplicate email'
+
+    poser.email.upcase!
+    assert !poser.valid?, 'poser should have been invalid due to duplicate email (different case)'
   end
 
   test "user should authenticate with email or username" do
