@@ -9,7 +9,7 @@ class Message
 
   index({coordinates: "2d"}, {background: true})
 
-  validates :body, :presence => true
+  validates :body, :presence => true, :length => { :maximum => 500 }
   validates :coordinates, :presence => true
   validates :location, :presence => true
   validates :username, :presence => true
