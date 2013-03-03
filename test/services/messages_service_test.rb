@@ -48,9 +48,10 @@ class MessagesServiceTest < MiniTest::Rails::ActiveSupport::TestCase
     @data_stub.expects(:within_spherical_circle).with(coordinates: [[latitude, longitude], distance_radians]).returns(circle_query_stub)
     circle_query_stub.expects(:desc).with(:created_at).returns(circle_query_stub)
     circle_query_stub.expects(:limit).with(25).returns(circle_query_stub)
-    circle_query_stub.expects(:created_at.lt).with(time).returns(result_stub)
+    circle_query_stub.expects(:where).with(:created_at.lt => time).returns(circle_query_stub)
+    circle_query_stub.expects(:entries).returns(result_stub)
 
-    @messages_service.get_messages_near_coordinates(latitude, longitude, time)
+    @messages_service.get_messages_near_coordinates(latitude, longitude, nil, time)
   end
 
   test "get_message_by_id should try to find message by id" do
