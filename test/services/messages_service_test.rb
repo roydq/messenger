@@ -17,13 +17,13 @@ class MessagesServiceTest < MiniTest::Rails::ActiveSupport::TestCase
     result_stub = stub(:result)
     @data_stub.expects(:within_spherical_circle).with(coordinates: [[latitude, longitude], distance_radians]).returns(circle_query_stub)
     circle_query_stub.expects(:desc).with(:created_at).returns(circle_query_stub)
-    circle_query_stub.expects(:page).with(2).returns(result_stub)
+    circle_query_stub.expects(:limit).with(25).returns(result_stub)
     result_stub.expects(:entries)
 
-    @messages_service.get_messages_near_coordinates(latitude, longitude, distance, page)
+    @messages_service.get_messages_near_coordinates(latitude, longitude, distance)
   end
 
-  test 'get_messages_near_coordinates should work even if distance or page are nil' do
+  test 'get_messages_near_coordinates should work even if distance is nil' do
     latitude = 10
     longitude = 10
     distance_radians = 50/3963.192
@@ -32,10 +32,25 @@ class MessagesServiceTest < MiniTest::Rails::ActiveSupport::TestCase
     result_stub = stub(:result)
     @data_stub.expects(:within_spherical_circle).with(coordinates: [[latitude, longitude], distance_radians]).returns(circle_query_stub)
     circle_query_stub.expects(:desc).with(:created_at).returns(circle_query_stub)
-    circle_query_stub.expects(:page).with(nil).returns(result_stub)
+    circle_query_stub.expects(:limit).with(25).returns(result_stub)
     result_stub.expects(:entries)
 
-    @messages_service.get_messages_near_coordinates(latitude, longitude, nil, nil)
+    @messages_service.get_messages_near_coordinates(latitude, longitude)
+  end
+
+  test 'get_messages_near_coordinates should query for messages before a given date' do
+    latitude = 10
+    longitude = 10
+    distance_radians = 50/3963.192
+    circle_query_stub = stub(:query)
+    time = Time.now
+    result_stub = stub(:result)
+    @data_stub.expects(:within_spherical_circle).with(coordinates: [[latitude, longitude], distance_radians]).returns(circle_query_stub)
+    circle_query_stub.expects(:desc).with(:created_at).returns(circle_query_stub)
+    circle_query_stub.expects(:limit).with(25).returns(circle_query_stub)
+    circle_query_stub.expects(:created_at.lt).with(time).returns(result_stub)
+
+    @messages_service.get_messages_near_coordinates(latitude, longitude, time)
   end
 
   test "get_message_by_id should try to find message by id" do

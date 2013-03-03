@@ -10,7 +10,7 @@ module V1
       lat = params[:lat].to_f
       lng = params[:lng].to_f
 
-      @messages = messages_service.get_messages_near_coordinates(lat, lng, params[:distance], params[:page])
+      @messages = messages_service.get_messages_near_coordinates(lat, lng, params[:distance], params[:before_date], params[:after_date])
       respond_with(@messages)
     end
 
