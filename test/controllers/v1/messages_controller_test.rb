@@ -15,7 +15,7 @@ class V1::MessagesControllerTest < MiniTest::Rails::ActionController::TestCase
     messages = [Fabricate.build(:message), Fabricate.build(:message)]
 
     # TODO: maybe there's a better way to do this
-    @controller.messages_service.expects(:get_messages_near_coordinates).with(10.01, 10.01, nil, nil).returns(messages)
+    @controller.messages_service.expects(:get_messages_near_coordinates).with(10.01, 10.01, nil, nil, nil).returns(messages)
 
     get :index, :lat => "10.01", :lng => "10.01", :format => :json
     assert_response :success
